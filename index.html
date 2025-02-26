@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>응원의 메시지 to you...</title>
+    <style>
+        
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        
+        .moving-text {
+            font-size: 60px;
+            font-weight: bold;
+            color: #00ff00;
+            text-shadow: 5px 5px 10px lime, -5px -5px 10px green;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+            animation: crazyMove 0.1s infinite alternate, colorChange 0.5s infinite alternate;
+        }
+
+        
+        @keyframes crazyMove {
+            0% { transform: translate(-50%, -50%) rotate(-10deg) translateX(-20px) scale(1); }
+            25% { transform: translate(-50%, -50%) rotate(5deg) translateX(15px) scale(1.1); }
+            50% { transform: translate(-50%, -50%) rotate(-5deg) translateY(-15px) scale(1.2); }
+            75% { transform: translate(-50%, -50%) rotate(15deg) translateY(10px) scale(1.1); }
+            100% { transform: translate(-50%, -50%) rotate(-10deg) translateX(-20px) scale(1); }
+        }
+
+        
+        @keyframes colorChange {
+            0% { color: #00ff00; text-shadow: 5px 5px 10px lime; }
+            50% { color: yellow; text-shadow: -5px -5px 10px orange; }
+            100% { color: red; text-shadow: 5px 5px 10px white; }
+        }
+
+        
+        .dancer {
+            width: 100px;
+            height: 150px;
+            background: url('https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif') center/cover;
+            position: absolute;
+            bottom: 0;
+            filter: brightness(0.7); 
+            animation: danceMove 1s infinite alternate ease-in-out;
+        }
+
+        
+        @keyframes danceMove {
+            0% { transform: translateY(0) rotate(-10deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+            100% { transform: translateY(0) rotate(-10deg); }
+        }
+    </style>
+</head>
+<body>
+
+    
+    <canvas id="matrixCanvas"></canvas>
+
+    
+    <div class="moving-text">💻 성남 그린 콤퓨타 왕지훈 빠이팅! 💻</div>
+
+    
+    <div class="dancer" style="left: 10%;"></div>
+    <div class="dancer" style="left: 30%;"></div>
+    <div class="dancer" style="left: 50%;"></div>
+    <div class="dancer" style="left: 70%;"></div>
+    <div class="dancer" style="left: 90%;"></div>
+
+    <script>
+        
+        const canvas = document.getElementById("matrixCanvas");
+        const ctx = canvas.getContext("2d");
+
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = "#00ff00"; 
+            ctx.font = `${fontSize}px monospace`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 50);
+
+        
+        window.addEventListener("resize", () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+
+</body>
+</html>
